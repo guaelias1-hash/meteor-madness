@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meteor Madness – Main Menu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Orbitron", sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e0e0e0;
+      background: black;
+    }
+
+    /* 🌌 Video de fondo */
+    video#bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.6) contrast(1.2);
+      z-index: 0;
+    }
+
+    /* 🚀 Pantalla inicial con fade */
+    .splash {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("Inicio.png") center center / cover no-repeat;
+      z-index: 1000;
+      opacity: 1;
+      transition: opacity 2s ease;
+    }
+    .splash.hide { opacity: 0; pointer-events: none; }
+
+    /* 🪐 Contenedor principal */
+    .menu {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .logo {
+      width: 280px;
+      max-width: 60%;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 18px #66ccff);
+    }
+
+    /* 🔘 Botones */
+    .btn {
+      background: linear-gradient(90deg, #a3d9ff, #0077ff, #a3d9ff);
+      background-size: 300% 100%;
+      border: none;
+      color: white;
+      padding: 14px 50px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 1.2em;
+      transition: all 0.4s ease;
+      text-shadow: 0 0 10px white;
+      box-shadow: 0 0 20px #00bfff, 0 0 45px #33ccff;
+      letter-spacing: 2px;
+    }
+
+    .btn:hover {
+      background-position: 100% 0;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🌌 Video de fondo -->
+  <video autoplay muted loop playsinline id="bg">
+    <source src="Background.mp4" type="video/mp4" />
+  </video>
+
+  <!-- 🚀 Pantalla de inicio -->
+  <div class="splash" id="splash"></div>
+
+  <!-- 🪐 Menú principal -->
+  <div class="menu">
+    <img src="Space Encarnación.webp" alt="Space Apps Encarnación" class="logo" />
+    <button class="btn" onclick="location.href='menu_gallery.html'">PLAY</button>
+    <button class="btn" onclick="location.href='info.html'">INFORMATION</button>
+  </div>
+
+  <script>
+    // Desvanece automáticamente la pantalla de inicio
+    const splash = document.getElementById("splash");
+    setTimeout(() => splash.classList.add("hide"), 2000);
+  </script>
+</body>
+</html>
+
