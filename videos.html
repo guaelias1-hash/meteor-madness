@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Meteor Videos – Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{ --glass: rgba(255,255,255,.07); --stroke: rgba(120,180,255,.25); --glow: rgba(0,150,255,.25); --txt:#eaf6ff; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Orbitron",sans-serif;color:var(--txt);background:#000 url("Inicio.png") center/cover fixed no-repeat;min-height:100vh;padding:clamp(14px,2.5vw,24px)}
+  .overlay{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(60% 40% at 50% 10%, rgba(0,15,40,.35), transparent 70%),linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.65))}
+  .wrap{position:relative;z-index:1;width:min(1200px,94vw);margin:0 auto}
+  header{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-bottom:14px}
+  h1{font-size:clamp(22px,5vw,36px);text-transform:uppercase;letter-spacing:.06em;color:#bfe4ff;text-shadow:0 0 14px #7cc7ff66}
+  .tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+  .btn{background:linear-gradient(90deg,#bfe4ff,#0a78ff,#bfe4ff);background-size:300% 100%;color:#001428;border:none;padding:10px 16px;border-radius:12px;cursor:pointer;letter-spacing:.06em;font-weight:700;box-shadow:0 0 16px #0ab0ff5a,0 0 32px #42c7ff33;transition:transform .25s,background-position .35s;text-decoration:none;display:inline-block}
+  .btn:hover{transform:translateY(-1px);background-position:100% 0}
+  .ghost{background:var(--glass);color:var(--txt);border:1px solid var(--stroke);text-shadow:none}
+  .field{display:flex;align-items:center;gap:8px;background:var(--glass);border:1px solid var(--stroke);border-radius:12px;padding:8px 12px}
+  .field input,.field select{background:transparent;color:var(--txt);border:none;outline:none;font-family:inherit;font-size:14px;min-width:0}
+  .panel{background:var(--glass);border:2px solid var(--stroke);border-radius:16px;backdrop-filter:blur(10px);padding:14px;margin-top:12px;box-shadow:0 0 26px var(--glow),inset 0 0 14px rgba(255,255,255,.08)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  .card{background:var(--glass);border:1px solid var(--stroke);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 20px rgba(0,150,255,.18);animation:fadeIn .5s ease both}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .thumb{width:100%;aspect-ratio:16/9;object-fit:cover;background:#000316}
+  .meta{padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+  .title{font-size:14px;font-weight:700}
+  .small{font-size:12px;opacity:.9}
+  .row{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+  .row .btn{padding:8px 10px;font-size:12px}
+  .empty{opacity:.9;text-align:center;padding:28px;font-size:14px}
+  .modal{position:fixed;inset:0;display:none;place-items:center;z-index:9999;background:rgba(0,0,0,.7)}
+  .modal.show{display:grid}
+  .sheet{background:var(--glass);border:1px solid var(--stroke);border-radius:16px;padding:16px;width:min(900px,92vw);box-shadow:0 0 26px var(--glow),inset 0 0 10px rgba(255,255,255,.06)}
+  .sheet h3{margin-bottom:10px;color:#bfe4ff}
+  .sheet video{width:100%;max-height:70vh;background:#000}
+  .sheet form{display:grid;gap:10px}
+  .sheet label{font-size:12px;opacity:.9}
+  .sheet input[type="text"],.sheet textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--txt);font-family:inherit;resize:vertical}
+  .sheet .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+  .toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:10000;background:rgba(10,120,255,.9);color:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.4);display:none;font-size:14px}
+  .toast.show{display:block}
+</style>
+</head>
+<body>
+<div class="overlay"></div>
+<div style="text-align:center; margin-bottom:30px;">
+    <h2>Video Destacado</h2>
+    <video controls width="800" style="max-width:100%; border-radius:12px;">
+      <source src="C:\Users\User\Documents\pagina de los kp/WhatsApp Video 2025-10-05 at 23.46.47.mp4" type="video/mp4">
+      Tu navegador no soporta el video.
+    </video>
+  </div>
+
+<div class="wrap">
+  <header>
+    <h1>Meteor Videos</h1>
+    <div class="tools">
+      <div class="field">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#bfe4ff" aria-hidden="true"><path d="M21 21l-4.35-4.35M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z"/></svg>
+        <input id="search" type="search" placeholder="Search videos..." />
+      </div>
+      <div class="field">
+        <label class="small" for="order">Order</label>
+        <select id="order">
+          <option value="createdAt-desc">Newest</option>
+          <option value="createdAt-asc">Oldest</option>
+          <option value="title-asc">Title A–Z</option>
+          <option value="title-desc">Title Z–A</option>
+          <option value="size-desc">Size ↓</option>
+          <option value="size-asc">Size ↑</option>
+        </select>
+      </div>
+      <a class="btn ghost" href="upload.html">Upload</a>
+      <a class="btn ghost" href="menu_gallery.html">Back to Gallery Menu</a>
+    </div>
+  </header>
+
+  <section class="panel">
+    <div id="gallery" class="grid"></div>
+    <div id="empty" class="empty">No videos yet. Use Upload to add your first one. 🌠</div>
+  </section>
+</div>
+
+<!-- Player Modal -->
+<div class="modal" id="playerModal" role="dialog" aria-modal="true" aria-label="Video player">
+  <div class="sheet">
+    <h3 id="playerTitle">Playing</h3>
+    <video id="player" controls></video>
+    <div class="actions"><button class="btn ghost" id="closePlayer">Close</button></div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal" id="editModal" role="dialog" aria-modal="true" aria-label="Edit video">
+  <div class="sheet">
+    <h3>Edit video</h3>
+    <form id="editForm">
+      <div><label for="editTitle">Title</label><input id="editTitle" type="text" required /></div>
+      <div><label for="editDesc">Description</label><textarea id="editDesc" rows="3" placeholder="Optional"></textarea></div>
+      <div class="actions"><button type="button" class="btn ghost" id="cancelEdit">Cancel</button><button type="submit" class="btn">Save</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ============= APP + IndexedDB ============= -->
+<script type="module">
+  /* ---------- IndexedDB adapter ---------- */
+  const DB_NAME='meteor_videos_db', STORE='videos'; let db;
+  function openDB(){ return new Promise((res,rej)=>{ const req=indexedDB.open(DB_NAME,1);
+    req.onupgradeneeded=e=>{ const db=e.target.result; if(!db.objectStoreNames.contains(STORE)){ const s=db.createObjectStore(STORE,{keyPath:'id'}); s.createIndex('createdAt','createdAt',{unique:false}); } };
+    req.onsuccess=()=>res(req.result); req.onerror=()=>rej(req.error);
+  });}
+  async function withStore(mode,fn){ if(!db) db=await openDB(); const tx=db.transaction(STORE,mode); const s=tx.objectStore(STORE); const r=await fn(s); return new Promise((res,rej)=>{tx.oncomplete=()=>res(r); tx.onerror=()=>rej(tx.error);});}
+  const idb={
+    async all(){ return withStore('readonly',s=>new Promise((res,rej)=>{ const r=s.getAll(); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); })); },
+    async get(id){ return withStore('readonly',s=>s.get(id)); },
+    async put(rec){ return withStore('readwrite',s=>s.put(rec)); },
+    async del(id){ return withStore('readwrite',s=>s.delete(id)); }
+  };
+
+  /* ---------- UI state ---------- */
+  let items=[]; let orderVal='createdAt-desc'; let searchVal='';
+  const gallery=document.getElementById('gallery'); const emptyMsg=document.getElementById('empty'); const toast=document.getElementById('toast');
+
+  const playerModal=document.getElementById('playerModal'); const player=document.getElementById('player'); const playerTitle=document.getElementById('playerTitle'); const closePlayer=document.getElementById('closePlayer');
+  const editModal=document.getElementById('editModal'); const editForm=document.getElementById('editForm'); const editTitle=document.getElementById('editTitle'); const editDesc=document.getElementById('editDesc'); let editingId=null;
+
+  function showToast(m){ toast.textContent=m; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1600); }
+  function openModal(m){ m.classList.add('show'); } function closeModal(m){ m.classList.remove('show'); }
+
+  closePlayer.addEventListener('click',()=>{ player.pause(); player.removeAttribute('src'); player.load(); closeModal(playerModal); });
+  playerModal.addEventListener('click',e=>{ if(e.target===playerModal) closePlayer.click(); });
+  editModal.addEventListener('click',e=>{ if(e.target===editModal) closeModal(editModal); });
+  document.getElementById('search').addEventListener('input',e=>{ searchVal=e.target.value; render(); });
+  document.getElementById('order').addEventListener('change',e=>{ orderVal=e.target.value; render(); });
+
+  function humanSize(b){ const u=['B','KB','MB','GB']; let i=0,n=b||0; while(n>=1024&&i<u.length-1){n/=1024;i++} return `${n.toFixed(n<10?2:1)} ${u[i]}`; }
+  function formatDur(sec){ const s=Math.round(sec||0), m=Math.floor(s/60), r=s%60; return `${m}:${String(r).padStart(2,'0')}`; }
+
+  function render(){
+    let list=[...items];
+    const q=searchVal.trim().toLowerCase();
+    if(q) list=list.filter(v=>(v.title||'').toLowerCase().includes(q)||(v.description||'').toLowerCase().includes(q));
+    const [field,dir]=orderVal.split('-');
+    list.sort((a,b)=>{ const va=a[field]??0, vb=b[field]??0; if(typeof va==='string') return dir==='asc'?va.localeCompare(vb):vb.localeCompare(va); return dir==='asc'?va-vb:vb-va; });
+
+    gallery.innerHTML='';
+    if(!list.length){ emptyMsg.style.display='block'; return; }
+    emptyMsg.style.display='none';
+
+    for(const v of list){
+      const card=document.createElement('article'); card.className='card'; card.dataset.id=v.id;
+      const thumbURL = v.thumbBlob ? URL.createObjectURL(v.thumbBlob) : 'https://dummyimage.com/640x360/000316/ffffff&text=Video';
+      card.innerHTML=`
+        <img class="thumb" src="${thumbURL}" alt="${v.title||'Video'}">
+        <div class="meta">
+          <div class="title">${v.title||'Untitled video'}</div>
+          <div class="small">${new Date(v.createdAt||Date.now()).toLocaleString()} • ${v.duration?formatDur(v.duration):'--:--'} • ${v.size?humanSize(v.size):'--'}</div>
+          <div class="row">
+            <button class="btn ghost" data-action="play">Play</button>
+            <button class="btn ghost" data-action="edit">Edit</button>
+            <button class="btn ghost" data-action="download">Download</button>
+            <button class="btn ghost" data-action="delete">Delete</button>
+          </div>
+        </div>`;
+      // Revocar thumb blob URL cuando salga de DOM
+      card.querySelector('img').addEventListener('load',()=>URL.revokeObjectURL(thumbURL),{once:true});
+      gallery.appendChild(card);
+    }
+  }
+
+  gallery.addEventListener('click',async e=>{
+    const btn=e.target.closest('button'); if(!btn) return;
+    const card=e.target.closest('.card'); if(!card) return;
+    const id=card.dataset.id;
+    const v=items.find(x=>x.id===id); if(!v) return;
+    const action=btn.dataset.action;
+
+    if(action==='play'){
+      const url=URL.createObjectURL(v.blob);
+      playerTitle.textContent=v.title||'Playing video';
+      player.src=url; openModal(playerModal);
+      player.play().catch(()=>{});
+      player.addEventListener('ended',()=>URL.revokeObjectURL(url),{once:true});
+      player.addEventListener('pause',()=>URL.revokeObjectURL(url),{once:true});
+    }
+    if(action==='download'){
+      const url=URL.createObjectURL(v.blob);
+      const a=document.createElement('a'); a.href=url; a.download=(v.title||'meteor')+'.mp4'; a.click();
+      setTimeout(()=>URL.revokeObjectURL(url),1000);
+    }
+    if(action==='edit'){
+      editingId=id; editTitle.value=v.title||''; editDesc.value=v.description||''; openModal(editModal);
+    }
+    if(action==='delete'){
+      if(confirm('Delete this video?')){ await idb.del(id); items=items.filter(x=>x.id!==id); render(); showToast('Deleted'); }
+    }
+  });
+
+  editForm.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const v=items.find(x=>x.id===editingId); if(!v) return;
+    v.title=editTitle.value.trim()||v.title; v.description=editDesc.value.trim(); v.updatedAt=Date.now();
+    await idb.put(v); render(); showToast('Saved'); closeModal(editModal);
+  });
+  document.getElementById('cancelEdit').addEventListener('click',()=>closeModal(editModal));
+
+  // Cargar datos
+  items = await idb.all();
+  render();
+</script>
+</body>
+</html>
+
+
+
